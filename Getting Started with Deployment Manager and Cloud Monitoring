@@ -1,0 +1,25 @@
+#Google Cloud Fundamentals: Getting Started with Deployment Manager and Cloud Monitoring
+Task 3: Create a Deployment Manager deployment
+1. For your convenience, place the zone that Qwiklabs assigned you to into an environment variable called MY_ZONE. At the Cloud Shell prompt, type this partial command:
+        export MY_ZONE=us-central1-a
+2. At the Cloud Shell prompt, download an editable Deployment Manager template
+        gsutil cp gs://cloud-training/gcpfcoreinfra/mydeploy.yaml mydeploy.yaml
+3. In the Cloud Shell, use the sed command to replace the PROJECT_ID placeholder string with your Google Cloud Platform project ID using this command:
+        sed -i -e "s/PROJECT_ID/$DEVSHELL_PROJECT_ID/" mydeploy.yaml
+4. In the Cloud Shell, use the sed command to replace the ZONE placeholder string with your Google Cloud Platform zone using this command
+        sed -i -e "s/ZONE/$MY_ZONE/" mydeploy.yaml
+5. View the mydeploy.yaml file, with your modifications, with this command:
+        cat mydeploy.yaml
+6. Build a deployment from the template:
+        gcloud deployment-manager deployments create my-first-depl --config mydeploy.yaml
+
+Task 4: Update a Deployment Manager deployment
+1. Return to your Cloud Shell prompt. Launch the nano text editor to edit the mydeploy.yaml file:
+        nano mydeploy.yaml
+2. Find the line that sets the value of the startup script, value: "apt-get update", and edit it so that it looks like this:
+        value: "apt-get update; apt-get install nginx-light -y"
+3. Return to your Cloud Shell prompt. Enter this command to cause Deployment Manager to update your deployment to install the new startup script:
+        gcloud deployment-manager deployments update my-first-depl --config mydeploy.yaml
+4. View the Load on a VM using Cloud Monitoring
+1. In the ssh session on my-vm, execute this command to create a CPU load:
+        dd if=/dev/urandom | gzip -9 >> /dev/null &
